@@ -1,0 +1,31 @@
+package com.github.mpsijm.javatreesitter.$languageName;
+
+import org.bridj.BridJ;
+import org.bridj.CRuntime;
+import org.bridj.Pointer;
+import org.bridj.ann.Library;
+import org.bridj.ann.Name;
+import org.bridj.ann.Ptr;
+import org.bridj.ann.Runtime;
+
+import com.github.mpsijm.javatreesitter.TSLanguage;
+
+/**
+ * JNA Wrapper for library <b>lib$languageName.so</b> generated from the $LanguageName grammar.<br>
+ */
+@Library("libtreesitter$languageName.so")
+@Runtime(CRuntime.class)
+public class TreeSitter$LanguageNameLibrary {
+	static {
+		BridJ.setNativeLibraryFile("libtreesitter$languageName.so",
+				new java.io.File(TreeSitterJavaLibrary.class.getResource("libtreesitter$languageName.so").getFile()));
+		BridJ.register();
+	}
+
+	public static Pointer<TSLanguage> tree_sitter_$languageName() {
+		return (Pointer)Pointer.pointerToAddress(tree_sitter_$languageName$2(), TSLanguage.class);
+	}
+	@Ptr
+	@Name("tree_sitter_$languageName")
+	protected native static long tree_sitter_$languageName$2();
+}

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.github.mpsijm</groupId>
+  <artifactId>javatreesitter</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>java-tree-sitter</name>
+  <url>https://github.com/mpsijm/java-tree-sitter</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.nativelibs4java</groupId>
+      <artifactId>jnaerator</artifactId>
+      <version>0.12</version>
+    </dependency>
+    <dependency>
+      <groupId>com.nativelibs4java</groupId>
+      <artifactId>bridj</artifactId>
+      <version>0.7.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <mkdir dir="${project.build.directory}/generated-sources/com/github/mpsijm/javatreesitter"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <id>Generate libtreesitter.so</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <workingDirectory>../core</workingDirectory>
+              <executable>gcc</executable>
+              <arguments>
+                <argument>lib/src/lib.c</argument>
+                <argument>-Ilib/include/</argument>
+                <argument>-Ilib/src/</argument>
+                <argument>-std=c99</argument>
+                <argument>-Wno-unused-variable</argument>
+                <argument>-shared</argument>
+                <argument>-fPIC</argument>
+                <argument>-o</argument>
+                <argument>
+                  ../java-tree-sitter/target/generated-sources/com/github/mpsijm/javatreesitter/libtreesitter.so
+                </argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Run JNAerator</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>com.ochafik.lang.jnaerator.JNAerator</mainClass>
+              <arguments>
+                <!--<argument>-v</argument>-->
+                <argument>-f</argument>
+                <!--<argument>-libFile</argument>-->
+                <!--<argument>target/generated/libtreesitter.so</argument>-->
+                <argument>-mode</argument>
+                <argument>Directory</argument>
+                <argument>-library</argument>
+                <argument>JavaTreeSitter</argument>
+                <argument>-o</argument>
+                <argument>target/generated-sources</argument>
+                <argument>-runtime</argument>
+                <argument>BridJ</argument>
+                <argument>-rootPackage</argument>
+                <argument>com.github.mpsijm</argument>
+                <argument>-forceStringSignatures</argument>
+                <!-- These header files will be converted to Java interfaces -->
+                <argument>../core/lib/include/tree_sitter/api.h</argument>
+                <argument>../core/lib/include/tree_sitter/parser.h</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Update @Library annotation of JavaTreeSitterLibrary</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <!-- Tiny hack: instead of calling `sed` direclty, pass the command to `bash` to allow *-globbing -->
+              <executable>bash</executable>
+              <arguments>
+                <argument>-c</argument>
+                <!-- @formatter:off -->
+                <argument>
+                  sed -i '
+                  s/Library("JavaTreeSitter")/Library("libtreesitter.so")/
+                  s/BridJ.register/BridJ.setNativeLibraryFile("libtreesitter.so",\
+\t\t\t\tnew java.io.File(JavaTreeSitterLibrary.class.getResource("libtreesitter.so").getFile()));\n\t\tBridJ.register/
+                  ' target/generated-sources/com/github/mpsijm/javatreesitter/*.java
+                </argument>
+                <!-- @formatter:on -->
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <!-- Example for generating language bindings from an external repository: -->
+      <!--plugin>
+        <groupId>com.github.mpsijm</groupId>
+        <artifactId>tree-sitter-generate-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>Generate bindings for Java</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <languageRepository>https://github.com/tree-sitter/tree-sitter-java.git</languageRepository>
+              <languageName>Java</languageName>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin-->
+    </plugins>
+  </build>
+</project>
