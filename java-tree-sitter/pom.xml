@@ -97,8 +97,6 @@
               <arguments>
                 <!--<argument>-v</argument>-->
                 <argument>-f</argument>
-                <!--<argument>-libFile</argument>-->
-                <!--<argument>${project.build.directory}/classes/com/github/mpsijm/javatreesitter/lib/linux_x64/libtreesitter.so</argument>-->
                 <argument>-mode</argument>
                 <argument>Directory</argument>
                 <argument>-library</argument>
