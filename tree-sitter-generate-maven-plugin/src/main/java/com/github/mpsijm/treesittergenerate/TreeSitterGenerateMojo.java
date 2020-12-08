@@ -1,6 +1,7 @@
 package com.github.mpsijm.treesittergenerate;
 
 import org.apache.maven.plugin.*;
+import org.apache.maven.project.*;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
 
@@ -15,6 +16,15 @@ import java.util.stream.*;
  * @phase generate-sources
  */
 public class TreeSitterGenerateMojo extends AbstractMojo {
+    /**
+     * The Maven Project. We'll add a new source directory to this project if everything is successful.
+     *
+     * @parameter expression="${project}"
+     * @readonly
+     * @required
+     */
+    private MavenProject project;
+
     /**
      * @parameter expression="${project.build.directory}"
      * @readonly
@@ -76,12 +86,8 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
         // Library locations defined at https://code.google.com/archive/p/bridj/wikis/LibrariesLookup.wiki
         Path classesPath = targetDir.toPath().resolve(Paths.get("classes",
                 "com", "github", "mpsijm", "javatreesitter", languageName, "lib", "linux_x64")); // TODO multi-arch
-        Path sourcesPath = targetDir.toPath().resolve(Paths.get("generated-sources", "tree-sitter",
-                "com", "github", "mpsijm", "javatreesitter", languageName));
         classesPath.toFile().mkdirs();
-        sourcesPath.toFile().mkdirs();
         Path librarySOPath = classesPath.resolve("libtreesitter" + languageName + ".so");
-        Path libraryJavaPath = sourcesPath.resolve("TreeSitter" + LanguageName + "Library.java");
 
         try {
             getLog().info("Executing `gcc`");
@@ -102,6 +108,12 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
             throw new MojoExecutionException("`gcc` was interrupted", e);
         }
 
+        Path sourcesRootPath = targetDir.toPath().resolve(Paths.get("generated-sources", "tree-sitter"));
+        Path sourcesPath = sourcesRootPath.resolve(
+                Paths.get("com", "github", "mpsijm", "javatreesitter", languageName));
+        sourcesPath.toFile().mkdirs();
+        Path libraryJavaPath = sourcesPath.resolve("TreeSitter" + LanguageName + "Library.java");
+
         try (InputStream templateStream = getClass().getClassLoader()
                 .getResourceAsStream("com/github/mpsijm/treesittergenerate/LanguageLibrary.java.template")) {
             String template = new BufferedReader(new InputStreamReader(templateStream)).lines().collect(Collectors.joining("\n"))
@@ -110,6 +122,8 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new MojoExecutionException("IOException while writing TreeSitter" + LanguageName + "Library.java", e);
         }
+
+        project.addCompileSourceRoot(sourcesRootPath.toFile().getAbsolutePath());
     }
 
     private String urlToName(String languageRepository) {
