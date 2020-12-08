@@ -52,7 +52,7 @@
             </goals>
             <configuration>
               <target>
-                <mkdir dir="${project.build.directory}/generated-sources/com/github/mpsijm/javatreesitter"/>
+                <mkdir dir="${project.build.directory}/classes/com/github/mpsijm/javatreesitter/lib/linux_x64"/>
               </target>
             </configuration>
           </execution>
@@ -82,8 +82,10 @@
                 <argument>-shared</argument>
                 <argument>-fPIC</argument>
                 <argument>-o</argument>
+                <!-- Library locations defined at https://code.google.com/archive/p/bridj/wikis/LibrariesLookup.wiki -->
+                <!-- TODO multi-arch -->
                 <argument>
-                  ../java-tree-sitter/target/generated-sources/com/github/mpsijm/javatreesitter/libtreesitter.so
+                  ../java-tree-sitter/target/classes/com/github/mpsijm/javatreesitter/lib/linux_x64/libtreesitter.so
                 </argument>
               </arguments>
             </configuration>
@@ -132,9 +134,13 @@
                 <!-- @formatter:off -->
                 <argument>
                   sed -i '
-                  s/Library("JavaTreeSitter")/Library("libtreesitter.so")/
-                  s/BridJ.register/BridJ.setNativeLibraryFile("libtreesitter.so",\
-\t\t\t\tnew java.io.File(JavaTreeSitterLibrary.class.getResource("libtreesitter.so").getFile()));\n\t\tBridJ.register/
+                  s/Library("JavaTreeSitter")/Library("treesitter")/
+                  s/BridJ.register/String file = JavaTreeSitterLibrary.class.getResource("lib\/linux_x64\/libtreesitter.so").getFile();\
+\t\tif (file.contains(".jar!"))\
+\t\t\torg.bridj.Platform.addEmbeddedLibraryResourceRoot("com\/github\/mpsijm\/javatreesitter\/lib\/");\
+\t\telse\
+\t\t\tBridJ.setNativeLibraryFile("treesitter", new java.io.File(file));\
+\t\tBridJ.register/
                   ' target/generated-sources/com/github/mpsijm/javatreesitter/*.java
                 </argument>
                 <!-- @formatter:on -->

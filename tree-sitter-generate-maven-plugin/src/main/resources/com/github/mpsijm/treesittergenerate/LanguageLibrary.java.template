@@ -13,12 +13,15 @@ import com.github.mpsijm.javatreesitter.TSLanguage;
 /**
  * JNA Wrapper for library <b>lib$languageName.so</b> generated from the $LanguageName grammar.<br>
  */
-@Library("libtreesitter$languageName.so")
+@Library("treesitter$languageName")
 @Runtime(CRuntime.class)
 public class TreeSitter$LanguageNameLibrary {
 	static {
-		BridJ.setNativeLibraryFile("libtreesitter$languageName.so",
-				new java.io.File(TreeSitterJavaLibrary.class.getResource("libtreesitter$languageName.so").getFile()));
+		String file = TreeSitterJavaLibrary.class.getResource("lib/linux_x64/libtreesitter$languageName.so").getFile();
+		if (file.contains(".jar!"))
+			org.bridj.Platform.addEmbeddedLibraryResourceRoot("com/github/mpsijm/javatreesitter/$languagename/lib/");
+		else
+			BridJ.setNativeLibraryFile("treesitter$languageName", new java.io.File(file));
 		BridJ.register();
 	}
 
