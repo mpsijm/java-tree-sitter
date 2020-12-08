@@ -69,12 +69,29 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.22.2</version>
-        <configuration>
-          <includes>
-            <!-- Make sure that the tests in the resources folder are not executed as well -->
-            <include>com/github/mpsijm/treesittergenerate/*</include>
-          </includes>
-        </configuration>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Run integration tests after compiling/installing artifact</id>
+            <!-- In install phase, else the test projects can't find the installed artifact :'D -->
+            <phase>install</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <!-- Make sure that the tests in the resources folder are not executed as well -->
+                <include>com/github/mpsijm/treesittergenerate/*</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
