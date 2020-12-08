@@ -76,7 +76,7 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
         // Library locations defined at https://code.google.com/archive/p/bridj/wikis/LibrariesLookup.wiki
         Path classesPath = targetDir.toPath().resolve(Paths.get("classes",
                 "com", "github", "mpsijm", "javatreesitter", languageName, "lib", "linux_x64")); // TODO multi-arch
-        Path sourcesPath = targetDir.toPath().resolve(Paths.get("generated-sources",
+        Path sourcesPath = targetDir.toPath().resolve(Paths.get("generated-sources", "tree-sitter",
                 "com", "github", "mpsijm", "javatreesitter", languageName));
         classesPath.toFile().mkdirs();
         sourcesPath.toFile().mkdirs();

@@ -108,7 +108,7 @@
                 <argument>-library</argument>
                 <argument>JavaTreeSitter</argument>
                 <argument>-o</argument>
-                <argument>target/generated-sources</argument>
+                <argument>target/generated-sources/tree-sitter</argument>
                 <argument>-runtime</argument>
                 <argument>BridJ</argument>
                 <argument>-rootPackage</argument>
@@ -141,7 +141,7 @@
 \t\telse\
 \t\t\tBridJ.setNativeLibraryFile("treesitter", new java.io.File(file));\
 \t\tBridJ.register/
-                  ' target/generated-sources/com/github/mpsijm/javatreesitter/*.java
+                  ' target/generated-sources/tree-sitter/com/github/mpsijm/javatreesitter/*.java
                 </argument>
                 <!-- @formatter:on -->
               </arguments>
@@ -161,7 +161,7 @@
             </goals>
             <configuration>
               <sources>
-                <source>${project.build.directory}/generated-sources</source>
+                <source>${project.build.directory}/generated-sources/tree-sitter</source>
               </sources>
             </configuration>
           </execution>
