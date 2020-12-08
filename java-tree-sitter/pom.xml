@@ -161,24 +161,6 @@
           </execution>
         </executions>
       </plugin>
-      <!-- Example for generating language bindings from an external repository: -->
-      <!--plugin>
-        <groupId>com.github.mpsijm</groupId>
-        <artifactId>tree-sitter-generate-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>Generate bindings for Java</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <languageRepository>https://github.com/tree-sitter/tree-sitter-java.git</languageRepository>
-              <languageName>Java</languageName>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin-->
     </plugins>
   </build>
 </project>
