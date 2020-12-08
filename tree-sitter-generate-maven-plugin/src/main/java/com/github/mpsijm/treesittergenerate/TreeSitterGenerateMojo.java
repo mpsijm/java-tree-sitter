@@ -59,6 +59,7 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
                 ProcessBuilder builder = new ProcessBuilder("tree-sitter", "generate");
                 builder.directory(gitDir.getAbsoluteFile());
                 builder.redirectErrorStream(true);
+                builder.inheritIO();
                 Process process = builder.start();
 
                 int exitCode = process.waitFor();
@@ -82,8 +83,9 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
             getLog().info("Executing `gcc`");
             ProcessBuilder builder = new ProcessBuilder("gcc", "src/parser.c", "-Isrc/", "-std=c99", "-shared", "-fPIC",
                     "-o", librarySOPath.toAbsolutePath().toString());
+            getLog().info(String.join(" ", builder.command()));
             builder.directory(gitDir.getAbsoluteFile());
-            builder.redirectErrorStream(true);
+            builder.inheritIO();
             Process process = builder.start();
 
             int exitCode = process.waitFor();
