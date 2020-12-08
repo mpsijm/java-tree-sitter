@@ -17,7 +17,7 @@ import com.github.mpsijm.javatreesitter.TSLanguage;
 @Runtime(CRuntime.class)
 public class TreeSitter$LanguageNameLibrary {
 	static {
-		String file = TreeSitterJavaLibrary.class.getResource("lib/linux_x64/libtreesitter$languageName.so").getFile();
+		String file = TreeSitter$LanguageNameLibrary.class.getResource("lib/linux_x64/libtreesitter$languageName.so").getFile();
 		if (file.contains(".jar!"))
 			org.bridj.Platform.addEmbeddedLibraryResourceRoot("com/github/mpsijm/javatreesitter/$languagename/lib/");
 		else
