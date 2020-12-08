@@ -7,7 +7,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
-  <name>tree-sitter-generate-maven-plugin Maven Plugin</name>
+  <name>tree-sitter-generate Maven Plugin</name>
   <url>http://maven.apache.org</url>
 
   <properties>
