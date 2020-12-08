@@ -30,4 +30,24 @@ public class TreeSitterGenerateTest extends TestCase {
 
         verifier.resetStreams();
     }
+
+    public void testToyGrammar() throws Exception {
+        File testDir = ResourceExtractor.simpleExtractResources(getClass(), "/test-project/toy-grammar");
+
+        Verifier verifier = new Verifier(testDir.getAbsolutePath());
+        verifier.displayStreamBuffers();
+
+        verifier.executeGoals(Arrays.asList("clean", "install"));
+
+        verifier.verifyErrorFreeLog();
+        verifier.verifyTextInLog("Executing `gcc`");
+
+        Path javaLibraryPath = testDir.toPath().resolve(Paths.get(
+                "target", "classes", "com", "github", "mpsijm", "javatreesitter", "toy"));
+        verifier.assertFilePresent(javaLibraryPath.resolve("TreeSitterToyLibrary.class").toString());
+        verifier.assertFilePresent(
+                javaLibraryPath.resolve(Paths.get("lib", "linux_x64", "libtreesittertoy.so")).toString());
+
+        verifier.resetStreams();
+    }
 }

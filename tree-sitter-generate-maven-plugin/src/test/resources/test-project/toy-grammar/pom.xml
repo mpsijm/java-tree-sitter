@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.mpsijm</groupId>
-  <artifactId>test-project.java-git-repo</artifactId>
+  <artifactId>test-project.toy-grammar</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>test-project.java-git-repo</name>
+  <name>test-project.toy-grammar</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,14 +40,13 @@
         <version>0.0.1-SNAPSHOT</version>
         <executions>
           <execution>
-            <id>Generate bindings for Java</id>
-            <phase>generate-sources</phase><!-- Note that this is the default phase -->
+            <id>Generate bindings for Toy language</id>
             <goals>
               <goal>generate</goal>
             </goals>
             <configuration>
-              <languageRepository>https://github.com/tree-sitter/tree-sitter-java.git</languageRepository>
-              <languageName>Java</languageName>
+              <languageRepository>grammar/</languageRepository>
+              <languageName>Toy</languageName>
             </configuration>
           </execution>
         </executions>
