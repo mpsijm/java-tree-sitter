@@ -67,7 +67,7 @@
               <goal>exec</goal>
             </goals>
             <configuration>
-              <workingDirectory>../core</workingDirectory>
+              <workingDirectory>${project.basedir}/../core</workingDirectory>
               <executable>gcc</executable>
               <arguments>
                 <argument>lib/src/lib.c</argument>
@@ -81,7 +81,7 @@
                 <!-- Library locations defined at https://code.google.com/archive/p/bridj/wikis/LibrariesLookup.wiki -->
                 <!-- TODO multi-arch -->
                 <argument>
-                  ../java-tree-sitter/target/classes/com/github/mpsijm/javatreesitter/lib/linux_x64/libtreesitter.so
+                  ${project.build.directory}/classes/com/github/mpsijm/javatreesitter/lib/linux_x64/libtreesitter.so
                 </argument>
               </arguments>
             </configuration>
@@ -98,21 +98,21 @@
                 <!--<argument>-v</argument>-->
                 <argument>-f</argument>
                 <!--<argument>-libFile</argument>-->
-                <!--<argument>target/generated/libtreesitter.so</argument>-->
+                <!--<argument>${project.build.directory}/classes/com/github/mpsijm/javatreesitter/lib/linux_x64/libtreesitter.so</argument>-->
                 <argument>-mode</argument>
                 <argument>Directory</argument>
                 <argument>-library</argument>
                 <argument>JavaTreeSitter</argument>
                 <argument>-o</argument>
-                <argument>target/generated-sources/tree-sitter</argument>
+                <argument>${project.build.directory}/generated-sources/tree-sitter</argument>
                 <argument>-runtime</argument>
                 <argument>BridJ</argument>
                 <argument>-rootPackage</argument>
                 <argument>com.github.mpsijm</argument>
                 <argument>-forceStringSignatures</argument>
                 <!-- These header files will be converted to Java interfaces -->
-                <argument>../core/lib/include/tree_sitter/api.h</argument>
-                <argument>../core/lib/include/tree_sitter/parser.h</argument>
+                <argument>${project.basedir}/../core/lib/include/tree_sitter/api.h</argument>
+                <argument>${project.basedir}/../core/lib/include/tree_sitter/parser.h</argument>
               </arguments>
             </configuration>
           </execution>
@@ -137,7 +137,7 @@
 \t\telse\
 \t\t\tBridJ.setNativeLibraryFile("treesitter", new java.io.File(file));\
 \t\tBridJ.register/
-                  ' target/generated-sources/tree-sitter/com/github/mpsijm/javatreesitter/*.java
+                  ' ${project.build.directory}/generated-sources/tree-sitter/com/github/mpsijm/javatreesitter/*.java
                 </argument>
                 <!-- @formatter:on -->
               </arguments>
