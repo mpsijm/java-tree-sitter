@@ -33,6 +33,12 @@
       <version>3.6.0</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-verifier</artifactId>
+      <version>1.7.2</version>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.eclipse.jgit</groupId>
@@ -58,6 +64,17 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+        <configuration>
+          <includes>
+            <!-- Make sure that the tests in the resources folder are not executed as well -->
+            <include>com/github/mpsijm/treesittergenerate/*</include>
+          </includes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
