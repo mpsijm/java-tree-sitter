@@ -40,7 +40,9 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
     private String languageName;
 
     /**
-     * The URL to the Git repository of the language that you want to generate TreeSitter bindings for.
+     * One of the following options:
+     * - The URL to the Git repository of the language that you want to generate TreeSitter bindings for.
+     * - The path to a local directory containing a language that you want to generate TreeSitter bindings for.
      *
      * @parameter
      * @required
@@ -51,23 +53,39 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
         String languageName = (this.languageName == null ? urlToName(this.languageRepository) : this.languageName)
                 .toLowerCase();
         String LanguageName = Character.toUpperCase(languageName.charAt(0)) + languageName.substring(1);
-        File gitDir = targetDir.toPath().resolve("tree-sitter-language").resolve(languageName).toFile();
+        boolean isExternalRepo = this.languageRepository.startsWith("http");
+        File languageDir = isExternalRepo
+                ? targetDir.toPath().resolve("tree-sitter-language").resolve(languageName).toFile()
+                : new File(this.languageRepository);
 
-        try {
-            getLog().info("Cloning " + languageRepository);
-            Git.cloneRepository().setURI(languageRepository).setDirectory(gitDir).call();
-        } catch (GitAPIException e) {
-            throw new MojoExecutionException("Failed to clone languageRepository " + languageRepository, e);
+        if (isExternalRepo) {
+            if (languageDir.exists()) {
+                try {
+                    getLog().info("Updating " + languageRepository);
+                    Git.open(languageDir).pull();
+                } catch (IOException e) {
+                    throw new MojoExecutionException("Failed to update languageRepository " + languageRepository, e);
+                }
+            } else {
+                try {
+                    getLog().info("Cloning " + languageRepository);
+                    Git.cloneRepository().setURI(languageRepository).setDirectory(languageDir).call();
+                } catch (GitAPIException e) {
+                    throw new MojoExecutionException("Failed to clone languageRepository " + languageRepository, e);
+                }
+            }
+        } else {
+            getLog().info("Using " + languageDir.getAbsolutePath());
         }
 
         // If the parser has not been generated yet from the grammar, try to do so.
         // This assumes that `tree-sitter` is on the PATH.
-        // This step is not necessary for the officially supported TreeSitter languages.
-        if (!gitDir.toPath().resolve("src").resolve("parser.c").toFile().exists()) {
+        // This step is not necessary for pre-generated languages (e.g. the officially supported TreeSitter languages).
+        if (!languageDir.toPath().resolve("src").resolve("parser.c").toFile().exists()) {
             try {
                 getLog().info("Executing `tree-sitter generate`");
                 ProcessBuilder builder = new ProcessBuilder("tree-sitter", "generate");
-                builder.directory(gitDir.getAbsoluteFile());
+                builder.directory(languageDir.getAbsoluteFile());
                 builder.redirectErrorStream(true);
                 builder.inheritIO();
                 Process process = builder.start();
@@ -94,7 +112,7 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
             ProcessBuilder builder = new ProcessBuilder("gcc", "src/parser.c", "-Isrc/", "-std=c99", "-shared", "-fPIC",
                     "-o", librarySOPath.toAbsolutePath().toString());
             getLog().info(String.join(" ", builder.command()));
-            builder.directory(gitDir.getAbsoluteFile());
+            builder.directory(languageDir.getAbsoluteFile());
             builder.inheritIO();
             Process process = builder.start();
 
