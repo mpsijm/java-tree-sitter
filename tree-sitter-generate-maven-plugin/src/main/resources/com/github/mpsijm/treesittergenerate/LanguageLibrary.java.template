@@ -19,7 +19,7 @@ public class TreeSitter$LanguageNameLibrary {
 	static {
 		String file = TreeSitter$LanguageNameLibrary.class.getResource("lib/linux_x64/libtreesitter$languageName.so").getFile();
 		if (file.contains(".jar!"))
-			org.bridj.Platform.addEmbeddedLibraryResourceRoot("com/github/mpsijm/javatreesitter/$languagename/lib/");
+			org.bridj.Platform.addEmbeddedLibraryResourceRoot("com/github/mpsijm/javatreesitter/$languageName/lib/");
 		else
 			BridJ.setNativeLibraryFile("treesitter$languageName", new java.io.File(file));
 		BridJ.register();
