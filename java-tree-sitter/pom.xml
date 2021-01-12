@@ -36,7 +36,7 @@
 
   <build>
     <plugins>
-      <!-- This plugin creates the output directory for the libtreesitter.so file -->
+      <!-- This plugin creates the output directory for the libtreesitter.dylib file -->
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
@@ -48,20 +48,20 @@
             </goals>
             <configuration>
               <target>
-                <mkdir dir="${project.build.directory}/classes/com/github/mpsijm/javatreesitter/lib/linux_x64"/>
+                <mkdir dir="${project.build.directory}/classes/com/github/mpsijm/javatreesitter/lib/darwin_universal"/>
               </target>
             </configuration>
           </execution>
         </executions>
       </plugin>
-      <!-- This plugin executes gcc to generate libtreesitter.so and runs JNAerator to generate Java interfaces -->
+      <!-- This plugin executes gcc to generate libtreesitter.dylib and runs JNAerator to generate Java interfaces -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
         <executions>
           <execution>
-            <id>Generate libtreesitter.so</id>
+            <id>Generate libtreesitter.dylib</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>exec</goal>
@@ -81,7 +81,7 @@
                 <!-- Library locations defined at https://code.google.com/archive/p/bridj/wikis/LibrariesLookup.wiki -->
                 <!-- TODO multi-arch -->
                 <argument>
-                  ${project.build.directory}/classes/com/github/mpsijm/javatreesitter/lib/linux_x64/libtreesitter.so
+                  ${project.build.directory}/classes/com/github/mpsijm/javatreesitter/lib/darwin_universal/libtreesitter.dylib
                 </argument>
               </arguments>
             </configuration>
@@ -129,7 +129,7 @@
                 <argument>
                   sed -i.bak '
                   s/Library("JavaTreeSitter")/Library("treesitter")/
-                  s/BridJ.register/String file = JavaTreeSitterLibrary.class.getResource("lib\/linux_x64\/libtreesitter.so").getFile();\
+                  s/BridJ.register/String file = JavaTreeSitterLibrary.class.getResource("lib\/darwin_universal\/libtreesitter.dylib").getFile();\
 		if (file.contains(".jar!"))\
 			org.bridj.Platform.addEmbeddedLibraryResourceRoot("com\/github\/mpsijm\/javatreesitter\/lib\/");\
 		else\

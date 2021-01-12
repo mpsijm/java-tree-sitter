@@ -11,13 +11,13 @@ import org.bridj.ann.Runtime;
 import com.github.mpsijm.javatreesitter.TSLanguage;
 
 /**
- * JNA Wrapper for library <b>lib$languageName.so</b> generated from the $LanguageName grammar.<br>
+ * JNA Wrapper for library <b>lib$languageName.dylib</b> generated from the $LanguageName grammar.<br>
  */
 @Library("treesitter$languageName")
 @Runtime(CRuntime.class)
 public class TreeSitter$LanguageNameLibrary {
 	static {
-		String file = TreeSitter$LanguageNameLibrary.class.getResource("lib/linux_x64/libtreesitter$languageName.so").getFile();
+		String file = TreeSitter$LanguageNameLibrary.class.getResource("lib/darwin_universal/libtreesitter$languageName.dylib").getFile();
 		if (file.contains(".jar!"))
 			org.bridj.Platform.addEmbeddedLibraryResourceRoot("com/github/mpsijm/javatreesitter/$languageName/lib/");
 		else

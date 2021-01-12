@@ -103,9 +103,9 @@ public class TreeSitterGenerateMojo extends AbstractMojo {
 
         // Library locations defined at https://code.google.com/archive/p/bridj/wikis/LibrariesLookup.wiki
         Path classesPath = targetDir.toPath().resolve(Paths.get("classes",
-                "com", "github", "mpsijm", "javatreesitter", languageName, "lib", "linux_x64")); // TODO multi-arch
+                "com", "github", "mpsijm", "javatreesitter", languageName, "lib", "darwin_universal")); // TODO multi-arch
         classesPath.toFile().mkdirs();
-        Path librarySOPath = classesPath.resolve("libtreesitter" + languageName + ".so");
+        Path librarySOPath = classesPath.resolve("libtreesitter" + languageName + ".dylib");
 
         try {
             getLog().info("Executing `gcc`");

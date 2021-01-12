@@ -26,7 +26,7 @@ public class TreeSitterGenerateTest extends TestCase {
                 "target", "classes", "com", "github", "mpsijm", "javatreesitter", "java"));
         verifier.assertFilePresent(javaLibraryPath.resolve("TreeSitterJavaLibrary.class").toString());
         verifier.assertFilePresent(
-                javaLibraryPath.resolve(Paths.get("lib", "linux_x64", "libtreesitterjava.so")).toString());
+                javaLibraryPath.resolve(Paths.get("lib", "darwin_universal", "libtreesitterjava.dylib")).toString());
 
         verifier.resetStreams();
     }
@@ -46,7 +46,7 @@ public class TreeSitterGenerateTest extends TestCase {
                 "target", "classes", "com", "github", "mpsijm", "javatreesitter", "toy"));
         verifier.assertFilePresent(javaLibraryPath.resolve("TreeSitterToyLibrary.class").toString());
         verifier.assertFilePresent(
-                javaLibraryPath.resolve(Paths.get("lib", "linux_x64", "libtreesittertoy.so")).toString());
+                javaLibraryPath.resolve(Paths.get("lib", "darwin_universal", "libtreesittertoy.dylib")).toString());
 
         verifier.resetStreams();
     }

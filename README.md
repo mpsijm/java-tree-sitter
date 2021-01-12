@@ -71,4 +71,4 @@ More examples are available as [test projects](tree-sitter-generate-maven-plugin
 ## Limitations
 
 - TreeSitter has many functions that pass `struct`s by value. However, BridJ does not support this due to a limitation in the underlying `dyncall` library: https://github.com/nativelibs4java/BridJ/issues/46
-- Currently, the native libraries are assumed to be compiled on the `linux_x64` architecture, multi-arch support is still to-do
+- Currently, the native libraries are assumed to be compiled on the `darwin_universal` architecture (MacOS), multi-arch support is still to-do
