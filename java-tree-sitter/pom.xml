@@ -127,7 +127,7 @@
                 <argument>-c</argument>
                 <!-- @formatter:off -->
                 <argument>
-                  sed -i '
+                  sed -i.bak '
                   s/Library("JavaTreeSitter")/Library("treesitter")/
                   s/BridJ.register/String file = JavaTreeSitterLibrary.class.getResource("lib\/linux_x64\/libtreesitter.so").getFile();\
 \t\tif (file.contains(".jar!"))\
