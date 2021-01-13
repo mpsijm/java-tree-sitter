@@ -121,7 +121,7 @@
               <goal>exec</goal>
             </goals>
             <configuration>
-              <!-- Tiny hack: instead of calling `sed` direclty, pass the command to `bash` to allow *-globbing -->
+              <!-- Tiny hack: instead of calling `sed` directly, pass the command to `bash` to allow *-globbing -->
               <executable>bash</executable>
               <arguments>
                 <argument>-c</argument>
@@ -130,11 +130,11 @@
                   sed -i.bak '
                   s/Library("JavaTreeSitter")/Library("treesitter")/
                   s/BridJ.register/String file = JavaTreeSitterLibrary.class.getResource("lib\/linux_x64\/libtreesitter.so").getFile();\
-\t\tif (file.contains(".jar!"))\
-\t\t\torg.bridj.Platform.addEmbeddedLibraryResourceRoot("com\/github\/mpsijm\/javatreesitter\/lib\/");\
-\t\telse\
-\t\t\tBridJ.setNativeLibraryFile("treesitter", new java.io.File(file));\
-\t\tBridJ.register/
+		if (file.contains(".jar!"))\
+			org.bridj.Platform.addEmbeddedLibraryResourceRoot("com\/github\/mpsijm\/javatreesitter\/lib\/");\
+		else\
+			BridJ.setNativeLibraryFile("treesitter", new java.io.File(file));\
+		BridJ.register/
                   ' ${project.build.directory}/generated-sources/tree-sitter/com/github/mpsijm/javatreesitter/*.java
                 </argument>
                 <!-- @formatter:on -->
